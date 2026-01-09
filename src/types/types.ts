@@ -118,3 +118,68 @@ export interface DocumentInvitation {
   document?: Document;
   creator?: Profile;
 }
+
+// Code Collaboration Types
+export interface CodeDocument {
+  id: string;
+  title: string;
+  language: string;
+  owner_id: string;
+  created_at: string;
+  updated_at: string;
+  owner?: Profile;
+}
+
+export interface CodeContent {
+  id: string;
+  code_document_id: string;
+  content: string;
+  updated_by: string | null;
+  updated_at: string;
+}
+
+export interface CodeCollaborator {
+  id: string;
+  code_document_id: string;
+  user_id: string;
+  role: CollaboratorRole;
+  created_at: string;
+  user?: Profile;
+}
+
+export interface CodeComment {
+  id: string;
+  code_document_id: string;
+  user_id: string;
+  content: string;
+  line_number: number | null;
+  resolved: boolean;
+  created_at: string;
+  updated_at: string;
+  user?: Profile;
+}
+
+export interface CodeVersion {
+  id: string;
+  code_document_id: string;
+  content: string;
+  version_number: number;
+  created_by: string | null;
+  created_at: string;
+  creator?: Profile;
+}
+
+export interface CodeActiveUser {
+  id: string;
+  code_document_id: string;
+  user_id: string;
+  cursor_position: number;
+  color: string;
+  last_seen: string;
+  user?: Profile;
+}
+
+export interface CodeDocumentWithAccess extends CodeDocument {
+  access_role: CollaboratorRole | 'owner';
+  collaborators_count?: number;
+}

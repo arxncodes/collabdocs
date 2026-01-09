@@ -11,6 +11,13 @@ import type {
   EditorContent,
   DocumentWithAccess,
   DocumentInvitation,
+  CodeDocument,
+  CodeContent,
+  CodeCollaborator,
+  CodeComment,
+  CodeVersion,
+  CodeActiveUser,
+  CodeDocumentWithAccess,
 } from '@/types/types';
 
 // ============ Profiles ============
@@ -712,6 +719,384 @@ export async function deleteInvitation(invitationId: string): Promise<boolean> {
 
   if (error) {
     console.error('Error deleting invitation:', error);
+    return false;
+  }
+  return true;
+}
+
+// ==================== CODE COLLABORATION API ====================
+
+// Code Documents
+export async function getCodeDocuments(userId: string): Promise<CodeDocumentWithAccess[]> {
+  const { data, error } = await supabase
+    .from('code_documents')
+    .select(`
+      *,
+      owner:profiles!code_documents_owner_id_fkey(*)
+    `)
+    .or(`owner_id.eq.${userId},id.in.(select code_document_id from code_collaborators where user_id = '${userId}')`)
+    .order('updated_at', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching code documents:', error);
+    return [];
+  }
+
+  return data.map((doc: any) => ({
+    ...doc,
+    access_role: doc.owner_id === userId ? 'owner' : 'editor',
+  }));
+}
+
+export async function getCodeDocument(codeDocumentId: string): Promise<CodeDocument | null> {
+  const { data, error } = await supabase
+    .from('code_documents')
+    .select(`
+      *,
+      owner:profiles!code_documents_owner_id_fkey(*)
+    `)
+    .eq('id', codeDocumentId)
+    .maybeSingle();
+
+  if (error) {
+    console.error('Error fetching code document:', error);
+    return null;
+  }
+  return data;
+}
+
+export async function createCodeDocument(title: string, language: string, ownerId: string): Promise<CodeDocument | null> {
+  const { data, error } = await supabase
+    .from('code_documents')
+    .insert({ title, language, owner_id: ownerId })
+    .select()
+    .maybeSingle();
+
+  if (error) {
+    console.error('Error creating code document:', error);
+    return null;
+  }
+
+  // Create initial content
+  if (data) {
+    await supabase
+      .from('code_content')
+      .insert({
+        code_document_id: data.id,
+        content: '',
+        updated_by: ownerId,
+      });
+  }
+
+  return data;
+}
+
+export async function updateCodeDocument(codeDocumentId: string, updates: Partial<CodeDocument>): Promise<boolean> {
+  const { error } = await supabase
+    .from('code_documents')
+    .update({ ...updates, updated_at: new Date().toISOString() })
+    .eq('id', codeDocumentId);
+
+  if (error) {
+    console.error('Error updating code document:', error);
+    return false;
+  }
+  return true;
+}
+
+export async function deleteCodeDocument(codeDocumentId: string): Promise<boolean> {
+  const { error } = await supabase
+    .from('code_documents')
+    .delete()
+    .eq('id', codeDocumentId);
+
+  if (error) {
+    console.error('Error deleting code document:', error);
+    return false;
+  }
+  return true;
+}
+
+// Code Content
+export async function getCodeContent(codeDocumentId: string): Promise<CodeContent | null> {
+  const { data, error} = await supabase
+    .from('code_content')
+    .select('*')
+    .eq('code_document_id', codeDocumentId)
+    .order('updated_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (error) {
+    console.error('Error fetching code content:', error);
+    return null;
+  }
+  return data;
+}
+
+export async function updateCodeContent(codeDocumentId: string, content: string, userId: string): Promise<boolean> {
+  const { error } = await supabase
+    .from('code_content')
+    .upsert({
+      code_document_id: codeDocumentId,
+      content,
+      updated_by: userId,
+      updated_at: new Date().toISOString(),
+    });
+
+  if (error) {
+    console.error('Error updating code content:', error);
+    return false;
+  }
+
+  // Update document's updated_at
+  await updateCodeDocument(codeDocumentId, {});
+
+  return true;
+}
+
+// Code Collaborators
+export async function getCodeCollaborators(codeDocumentId: string): Promise<CodeCollaborator[]> {
+  const { data, error } = await supabase
+    .from('code_collaborators')
+    .select(`
+      *,
+      user:profiles!code_collaborators_user_id_fkey(*)
+    `)
+    .eq('code_document_id', codeDocumentId);
+
+  if (error) {
+    console.error('Error fetching code collaborators:', error);
+    return [];
+  }
+  return data || [];
+}
+
+export async function addCodeCollaborator(
+  codeDocumentId: string,
+  userId: string,
+  role: CollaboratorRole
+): Promise<boolean> {
+  const { error } = await supabase
+    .from('code_collaborators')
+    .insert({
+      code_document_id: codeDocumentId,
+      user_id: userId,
+      role,
+    });
+
+  if (error) {
+    console.error('Error adding code collaborator:', error);
+    return false;
+  }
+  return true;
+}
+
+export async function updateCodeCollaborator(
+  collaboratorId: string,
+  role: CollaboratorRole
+): Promise<boolean> {
+  const { error } = await supabase
+    .from('code_collaborators')
+    .update({ role })
+    .eq('id', collaboratorId);
+
+  if (error) {
+    console.error('Error updating code collaborator:', error);
+    return false;
+  }
+  return true;
+}
+
+export async function removeCodeCollaborator(collaboratorId: string): Promise<boolean> {
+  const { error } = await supabase
+    .from('code_collaborators')
+    .delete()
+    .eq('id', collaboratorId);
+
+  if (error) {
+    console.error('Error removing code collaborator:', error);
+    return false;
+  }
+  return true;
+}
+
+// Code Comments
+export async function getCodeComments(codeDocumentId: string): Promise<CodeComment[]> {
+  const { data, error } = await supabase
+    .from('code_comments')
+    .select(`
+      *,
+      user:profiles!code_comments_user_id_fkey(*)
+    `)
+    .eq('code_document_id', codeDocumentId)
+    .order('created_at', { ascending: true });
+
+  if (error) {
+    console.error('Error fetching code comments:', error);
+    return [];
+  }
+  return data || [];
+}
+
+export async function createCodeComment(
+  codeDocumentId: string,
+  userId: string,
+  content: string,
+  lineNumber: number | null
+): Promise<CodeComment | null> {
+  const { data, error } = await supabase
+    .from('code_comments')
+    .insert({
+      code_document_id: codeDocumentId,
+      user_id: userId,
+      content,
+      line_number: lineNumber,
+    })
+    .select(`
+      *,
+      user:profiles!code_comments_user_id_fkey(*)
+    `)
+    .maybeSingle();
+
+  if (error) {
+    console.error('Error creating code comment:', error);
+    return null;
+  }
+  return data;
+}
+
+export async function updateCodeComment(commentId: string, content: string): Promise<boolean> {
+  const { error } = await supabase
+    .from('code_comments')
+    .update({ content, updated_at: new Date().toISOString() })
+    .eq('id', commentId);
+
+  if (error) {
+    console.error('Error updating code comment:', error);
+    return false;
+  }
+  return true;
+}
+
+export async function resolveCodeComment(commentId: string, resolved: boolean): Promise<boolean> {
+  const { error } = await supabase
+    .from('code_comments')
+    .update({ resolved, updated_at: new Date().toISOString() })
+    .eq('id', commentId);
+
+  if (error) {
+    console.error('Error resolving code comment:', error);
+    return false;
+  }
+  return true;
+}
+
+export async function deleteCodeComment(commentId: string): Promise<boolean> {
+  const { error } = await supabase
+    .from('code_comments')
+    .delete()
+    .eq('id', commentId);
+
+  if (error) {
+    console.error('Error deleting code comment:', error);
+    return false;
+  }
+  return true;
+}
+
+// Code Versions
+export async function getCodeVersions(codeDocumentId: string): Promise<CodeVersion[]> {
+  const { data, error } = await supabase
+    .from('code_versions')
+    .select(`
+      *,
+      creator:profiles!code_versions_created_by_fkey(*)
+    `)
+    .eq('code_document_id', codeDocumentId)
+    .order('version_number', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching code versions:', error);
+    return [];
+  }
+  return data || [];
+}
+
+export async function createCodeVersion(
+  codeDocumentId: string,
+  content: string,
+  versionNumber: number,
+  userId: string
+): Promise<boolean> {
+  const { error } = await supabase
+    .from('code_versions')
+    .insert({
+      code_document_id: codeDocumentId,
+      content,
+      version_number: versionNumber,
+      created_by: userId,
+    });
+
+  if (error) {
+    console.error('Error creating code version:', error);
+    return false;
+  }
+  return true;
+}
+
+// Code Active Users
+export async function getCodeActiveUsers(codeDocumentId: string): Promise<CodeActiveUser[]> {
+  const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
+
+  const { data, error } = await supabase
+    .from('code_active_users')
+    .select(`
+      *,
+      user:profiles!code_active_users_user_id_fkey(*)
+    `)
+    .eq('code_document_id', codeDocumentId)
+    .gte('last_seen', fiveMinutesAgo);
+
+  if (error) {
+    console.error('Error fetching code active users:', error);
+    return [];
+  }
+  return data || [];
+}
+
+export async function updateCodePresence(
+  codeDocumentId: string,
+  userId: string,
+  cursorPosition: number,
+  color: string
+): Promise<boolean> {
+  const { error } = await supabase
+    .from('code_active_users')
+    .upsert({
+      code_document_id: codeDocumentId,
+      user_id: userId,
+      cursor_position: cursorPosition,
+      color,
+      last_seen: new Date().toISOString(),
+    });
+
+  if (error) {
+    console.error('Error updating code presence:', error);
+    return false;
+  }
+  return true;
+}
+
+export async function removeCodePresence(codeDocumentId: string, userId: string): Promise<boolean> {
+  const { error } = await supabase
+    .from('code_active_users')
+    .delete()
+    .eq('code_document_id', codeDocumentId)
+    .eq('user_id', userId);
+
+  if (error) {
+    console.error('Error removing code presence:', error);
     return false;
   }
   return true;

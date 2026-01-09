@@ -1,6 +1,8 @@
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
 import EditorPage from './pages/EditorPage';
+import CodeDashboardPage from './pages/CodeDashboardPage';
+import CodeEditorPage from './pages/CodeEditorPage';
 import AdminPage from './pages/AdminPage';
 import ProfilePage from './pages/ProfilePage';
 import InvitationPage from './pages/InvitationPage';
@@ -30,6 +32,18 @@ const routes: RouteConfig[] = [
     name: 'Editor',
     path: '/editor/:documentId',
     element: <EditorPage />,
+    visible: false,
+  },
+  {
+    name: 'Code Dashboard',
+    path: '/codes',
+    element: <CodeDashboardPage />,
+    visible: false,
+  },
+  {
+    name: 'Code Editor',
+    path: '/code/:codeDocumentId',
+    element: <CodeEditorPage />,
     visible: false,
   },
   {
