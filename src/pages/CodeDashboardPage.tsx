@@ -89,24 +89,34 @@ export default function CodeDashboardPage() {
     }
 
     setCreating(true);
-    const newCode = await createCodeDocument(newCodeTitle.trim(), newCodeLanguage, user.id);
-    setCreating(false);
-
-    if (newCode) {
-      toast({
-        title: 'Success',
-        description: 'Code document created successfully',
-      });
-      setShowCreateDialog(false);
-      setNewCodeTitle('');
-      setNewCodeLanguage('javascript');
-      navigate(`/code/${newCode.id}`);
-    } else {
+    try {
+      const newCode = await createCodeDocument(newCodeTitle.trim(), newCodeLanguage, user.id);
+      
+      if (newCode) {
+        toast({
+          title: 'Success',
+          description: 'Code document created successfully',
+        });
+        setShowCreateDialog(false);
+        setNewCodeTitle('');
+        setNewCodeLanguage('javascript');
+        navigate(`/code/${newCode.id}`);
+      } else {
+        toast({
+          title: 'Error',
+          description: 'Failed to create code document - no data returned',
+          variant: 'destructive',
+        });
+      }
+    } catch (error: any) {
+      console.error('Create code document error:', error);
       toast({
         title: 'Error',
-        description: 'Failed to create code document',
+        description: error?.message || 'Failed to create code document',
         variant: 'destructive',
       });
+    } finally {
+      setCreating(false);
     }
   };
 

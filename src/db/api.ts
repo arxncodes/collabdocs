@@ -766,38 +766,58 @@ export async function getCodeDocument(codeDocumentId: string): Promise<CodeDocum
 }
 
 export async function createCodeDocument(title: string, language: string, ownerId: string): Promise<CodeDocument | null> {
-  // First, verify the user profile exists
-  const { data: profileData, error: profileError } = await supabase
-    .from('profiles')
-    .select('id')
-    .eq('id', ownerId)
-    .maybeSingle();
+  try {
+    console.log('Creating code document for user:', ownerId);
+    
+    // Check current auth session
+    const { data: { session } } = await supabase.auth.getSession();
+    console.log('Current session user:', session?.user?.id);
+    console.log('Owner ID:', ownerId);
+    console.log('Session matches owner:', session?.user?.id === ownerId);
+    
+    // First, verify the user profile exists
+    const { data: profileData, error: profileError } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('id', ownerId)
+      .maybeSingle();
 
-  if (profileError || !profileData) {
-    console.error('Error verifying profile:', profileError);
-    console.error('Profile not found for user:', ownerId);
-    return null;
-  }
+    if (profileError) {
+      console.error('Error verifying profile:', profileError);
+      throw new Error(`Profile verification failed: ${profileError.message}`);
+    }
 
-  const { data, error } = await supabase
-    .from('code_documents')
-    .insert({ title, language, owner_id: ownerId })
-    .select()
-    .maybeSingle();
+    if (!profileData) {
+      console.error('Profile not found for user:', ownerId);
+      throw new Error('Profile not found. Please try logging out and back in.');
+    }
 
-  if (error) {
-    console.error('Error creating code document:', error);
-    console.error('Error details:', {
-      message: error.message,
-      details: error.details,
-      hint: error.hint,
-      code: error.code,
-    });
-    return null;
-  }
+    console.log('Profile verified:', profileData);
 
-  // Create owner as collaborator
-  if (data) {
+    const { data, error } = await supabase
+      .from('code_documents')
+      .insert({ title, language, owner_id: ownerId })
+      .select()
+      .maybeSingle();
+
+    if (error) {
+      console.error('Error creating code document:', error);
+      console.error('Error details:', {
+        message: error.message,
+        details: error.details,
+        hint: error.hint,
+        code: error.code,
+      });
+      throw new Error(`Failed to create document: ${error.message}`);
+    }
+
+    if (!data) {
+      throw new Error('Document created but no data returned');
+    }
+
+    console.log('Document created:', data);
+
+    // Create owner as collaborator
     const { error: collabError } = await supabase
       .from('code_collaborators')
       .insert({
@@ -831,9 +851,12 @@ export async function createCodeDocument(title: string, language: string, ownerI
       // Don't fail the whole operation if content creation fails
       // The content can be created later
     }
-  }
 
-  return data;
+    return data;
+  } catch (error) {
+    console.error('createCodeDocument error:', error);
+    throw error;
+  }
 }
 
 export async function updateCodeDocument(codeDocumentId: string, updates: Partial<CodeDocument>): Promise<boolean> {
