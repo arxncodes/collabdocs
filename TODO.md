@@ -103,6 +103,18 @@
   - [x] Clear Vite cache to remove stale modules
   - [x] Create REACT_ERROR_FIX.md documentation
   - [x] Run lint and verify fix
+- [x] Step 17: Add manual save functionality
+  - [x] Add currentContent state to track editor content
+  - [x] Add hasUnsavedChanges state to track save status
+  - [x] Update handleContentChange to track unsaved changes
+  - [x] Implement handleManualSave function with error handling
+  - [x] Add Save button to toolbar with conditional styling
+  - [x] Add status indicators (Saving, Unsaved changes, All saved)
+  - [x] Implement keyboard shortcut (Ctrl+S / Cmd+S)
+  - [x] Enhance auto-save with toast notifications
+  - [x] Increase auto-save delay to 2 seconds
+  - [x] Create MANUAL_SAVE_FEATURE.md documentation
+  - [x] Run lint and verify all changes
 
 ## Notes
 - Using Supabase for backend (database + auth + real-time)
@@ -182,6 +194,18 @@
 - **Export Button**: Located in editor toolbar as dropdown menu with two options
 - **Error Handling**: Toast notifications for success/failure, validates content before export
 - **Documentation**: EXPORT_FEATURE.md with complete usage guide and troubleshooting
+
+## Manual Save Feature
+- **Auto-Save**: Automatically saves changes after 2 seconds of inactivity with debouncing
+- **Manual Save Button**: Highlighted Save button in toolbar when there are unsaved changes
+- **Keyboard Shortcut**: Ctrl+S (Windows/Linux) or Cmd+S (Mac) to save from anywhere
+- **Status Indicators**: Three states - "Saving..." (gray + spinner), "Unsaved changes" (amber), "All changes saved" (green)
+- **Visual Feedback**: Save button changes variant (default when unsaved, ghost when saved) and disables when no changes
+- **Toast Notifications**: Success notification on save, error notification with retry prompt on failure
+- **State Tracking**: Tracks currentContent and hasUnsavedChanges to manage save state accurately
+- **Error Handling**: Graceful error handling with user-friendly messages and retry options
+- **Version Snapshots**: Creates automatic version snapshot every 10 edits for history tracking
+- **Documentation**: MANUAL_SAVE_FEATURE.md with complete feature guide and troubleshooting
 
 
 

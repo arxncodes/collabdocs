@@ -65,6 +65,8 @@ export default function EditorPage() {
 
   const [document, setDocument] = useState<Document | null>(null);
   const [content, setContent] = useState<DocumentContent | null>(null);
+  const [currentContent, setCurrentContent] = useState<EditorContent | null>(null);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [collaborators, setCollaborators] = useState<Collaborator[]>([]);
   const [comments, setComments] = useState<Comment[]>([]);
   const [activeUsers, setActiveUsers] = useState<ActiveUser[]>([]);
@@ -172,32 +174,96 @@ export default function EditorPage() {
     };
   }, [documentId, user, cursorPosition, userColor, loadDocument, loadContent, loadCollaborators, loadComments, loadActiveUsers, loadVersions]);
 
+  const handleManualSave = useCallback(async () => {
+    if (!documentId || !user || !currentContent) {
+      toast({
+        title: 'Error',
+        description: 'No changes to save',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    try {
+      setSaving(true);
+      await updateDocumentContent(documentId, currentContent, user.id);
+      setHasUnsavedChanges(false);
+      setSaving(false);
+
+      toast({
+        title: 'Saved',
+        description: 'Document saved successfully',
+      });
+    } catch (error) {
+      console.error('Save failed:', error);
+      setSaving(false);
+      toast({
+        title: 'Save failed',
+        description: 'Failed to save document. Please try again.',
+        variant: 'destructive',
+      });
+    }
+  }, [documentId, user, currentContent, toast]);
+
+  // Keyboard shortcut for save (Ctrl+S or Cmd+S)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+        handleManualSave();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleManualSave]);
+
   const handleContentChange = useCallback(
     (newContent: EditorContent) => {
       if (!documentId || !user) return;
+
+      // Update current content and mark as unsaved
+      setCurrentContent(newContent);
+      setHasUnsavedChanges(true);
 
       // Clear existing timeout
       if (saveTimeoutRef.current) {
         clearTimeout(saveTimeoutRef.current);
       }
 
-      // Auto-save after 1 second of inactivity
+      // Auto-save after 2 seconds of inactivity
       saveTimeoutRef.current = setTimeout(async () => {
-        setSaving(true);
-        await updateDocumentContent(documentId, newContent, user.id);
-        setSaving(false);
+        try {
+          setSaving(true);
+          await updateDocumentContent(documentId, newContent, user.id);
+          setHasUnsavedChanges(false);
+          setSaving(false);
 
-        // Create version snapshot every 10 edits
-        editCountRef.current += 1;
-        if (editCountRef.current >= 10) {
-          editCountRef.current = 0;
-          lastVersionRef.current += 1;
-          await createDocumentVersion(documentId, newContent, lastVersionRef.current, user.id);
-          loadVersions();
+          // Create version snapshot every 10 edits
+          editCountRef.current += 1;
+          if (editCountRef.current >= 10) {
+            editCountRef.current = 0;
+            lastVersionRef.current += 1;
+            await createDocumentVersion(documentId, newContent, lastVersionRef.current, user.id);
+            loadVersions();
+          }
+
+          toast({
+            title: 'Auto-saved',
+            description: 'Your changes have been saved automatically',
+          });
+        } catch (error) {
+          console.error('Auto-save failed:', error);
+          setSaving(false);
+          toast({
+            title: 'Auto-save failed',
+            description: 'Please save manually',
+            variant: 'destructive',
+          });
         }
-      }, 1000);
+      }, 2000);
     },
-    [documentId, user]
+    [documentId, user, loadVersions, toast]
   );
 
   const handleTitleChange = async () => {
@@ -310,11 +376,30 @@ export default function EditorPage() {
                 Saving...
               </span>
             )}
+            {!saving && hasUnsavedChanges && (
+              <span className="text-sm text-amber-600 dark:text-amber-400 flex items-center gap-2">
+                Unsaved changes
+              </span>
+            )}
+            {!saving && !hasUnsavedChanges && currentContent && (
+              <span className="text-sm text-green-600 dark:text-green-400 flex items-center gap-2">
+                All changes saved
+              </span>
+            )}
           </div>
 
           <div className="flex items-center gap-2">
             <PresenceIndicator activeUsers={activeUsers} currentUserId={user?.id || ''} />
             <Separator orientation="vertical" className="h-6" />
+            <Button
+              variant={hasUnsavedChanges ? 'default' : 'ghost'}
+              size="sm"
+              onClick={handleManualSave}
+              disabled={saving || !hasUnsavedChanges}
+            >
+              <Save className="h-4 w-4 mr-2" />
+              Save
+            </Button>
             <Button
               variant="ghost"
               size="sm"
