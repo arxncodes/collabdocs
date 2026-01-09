@@ -158,6 +158,14 @@
   - [x] Update UI to display actual error messages
   - [x] Create CODE_CREATION_DEBUG_GUIDE.md documentation
   - [x] Run lint and verify all changes
+- [x] Step 23: Fix infinite recursion in code_documents RLS policies
+  - [x] Identify circular dependency between code_documents and code_collaborators
+  - [x] Create security definer function user_has_code_document_access
+  - [x] Update code_documents SELECT policy to use function
+  - [x] Simplify code_collaborators policies
+  - [x] Apply migrations to fix policies
+  - [x] Verify no infinite recursion error
+  - [x] Create INFINITE_RECURSION_FIX.md documentation
 
 ## Notes
 - Using Supabase for backend (database + auth + real-time)
@@ -279,6 +287,18 @@
 - **Transaction Ordering**: Creates parent records (document) before children (collaborator, content) to avoid race conditions
 - **Graceful Degradation**: Continues operation even if non-critical steps fail, with detailed logging for debugging
 - **Documentation**: CODE_DOCUMENT_CREATION_FIX.md with root cause analysis, changes made, testing steps, debugging guide, and prevention best practices
+
+## Infinite Recursion Fix
+- **Root Cause**: Circular dependency in RLS policies where code_documents SELECT policy checked code_collaborators, and code_collaborators policies checked code_documents, creating infinite recursion loop
+- **Security Definer Function**: Created user_has_code_document_access function that runs with elevated privileges (SECURITY DEFINER) to check document access without triggering RLS policies
+- **Function Logic**: Checks if user is owner (code_documents.owner_id = user_id) OR collaborator (exists in code_collaborators), returns boolean without causing recursion
+- **Updated SELECT Policy**: Changed code_documents SELECT policy from subquery to function call: user_has_code_document_access(id, auth.uid())
+- **Simplified Collaborator Policies**: Rewrote code_collaborators policies (SELECT, INSERT, UPDATE, DELETE) to avoid circular references while maintaining security
+- **Migration Applied**: fix_code_documents_infinite_recursion and add_code_documents_access_function migrations successfully applied
+- **Benefits**: Breaks circular dependency, maintains security, better performance than nested subqueries, supports collaboration feature, easier to maintain
+- **Security**: Function is read-only, uses parameterized queries, no SQL injection risk, still enforces ownership and collaboration checks
+- **Testing**: Verified no infinite recursion error when querying code_documents, policies work correctly for owners and collaborators
+- **Documentation**: INFINITE_RECURSION_FIX.md with detailed explanation, implementation steps, testing procedures, security considerations, and troubleshooting guide
 
 
 
