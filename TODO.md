@@ -78,6 +78,24 @@
   - [x] Create README_DESKTOP.md
   - [x] Create ELECTRON_CONVERSION.md technical summary
   - [x] Run lint and verify all changes
+- [x] Step 14: Add distinct editor textbox styling
+  - [x] Update RichTextEditor with cream/golden theme for light mode
+  - [x] Update RichTextEditor with dark/bronze theme for dark mode
+  - [x] Add 2px border with rounded corners
+  - [x] Add generous padding and minimum height
+  - [x] Create EDITOR_VISUAL_DESIGN.md documentation
+  - [x] Run lint and verify changes
+- [x] Step 15: Add document export functionality
+  - [x] Install file-saver and html-docx-js-typescript libraries
+  - [x] Create exportUtils.ts with export functions
+  - [x] Add exportAsText function for .txt export
+  - [x] Add exportAsDocx function for .docx export
+  - [x] Add filename sanitization and generation
+  - [x] Update EditorPage with Export dropdown button
+  - [x] Add export handlers with error handling
+  - [x] Add toast notifications for export success/failure
+  - [x] Create EXPORT_FEATURE.md documentation
+  - [x] Run lint and verify all changes
 
 ## Notes
 - Using Supabase for backend (database + auth + real-time)
@@ -145,6 +163,18 @@
 - **Output Location**: `release/` directory
 - **File Size**: ~150-200 MB per platform
 - **Documentation**: BUILD_GUIDE.md, QUICK_START.md, README_DESKTOP.md, ELECTRON_CONVERSION.md
+
+## Document Export Feature
+- **Export Formats**: Plain Text (.txt) and Microsoft Word (.docx)
+- **Text Export**: Extracts plain text from HTML, removes all formatting, preserves line breaks
+- **Word Export**: Converts HTML to DOCX format, preserves formatting (fonts, colors, headings, lists, blockquotes, code blocks)
+- **Filename Convention**: `DocumentTitle_YYYY-MM-DD_HH-MM.ext` with automatic sanitization
+- **Browser Compatibility**: Works in all modern browsers (Chrome, Firefox, Safari, Edge)
+- **Client-Side Processing**: All export processing happens in browser, no server upload required
+- **Libraries Used**: file-saver for download triggering, html-docx-js-typescript for DOCX conversion
+- **Export Button**: Located in editor toolbar as dropdown menu with two options
+- **Error Handling**: Toast notifications for success/failure, validates content before export
+- **Documentation**: EXPORT_FEATURE.md with complete usage guide and troubleshooting
 
 
 

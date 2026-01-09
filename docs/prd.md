@@ -6,10 +6,9 @@ Real-Time Collaboration Desktop App
 
 ### 1.2 Application Description
 A desktop application for Windows (packaged as .exe) similar to Google Docs, enabling multiple users to edit the same document simultaneously with live updates, real-time collaboration features, and comprehensive document management capabilities.
-\n### 1.3 Application Purpose
-Provide a seamless collaborative editing experience where teams can work together on documents in real-time, with features including live cursor tracking, presence indicators, version control, and commenting system, all within a native Windows desktop application.
 
----
+### 1.3 Application Purpose\nProvide a seamless collaborative editing experience where teams can work together on documents in real-time, with features including live cursor tracking, presence indicators, version control, and commenting system, all within a native Windows desktop application.
+\n---
 
 ## 2. Core Features
 
@@ -17,34 +16,36 @@ Provide a seamless collaborative editing experience where teams can work togethe
 - Google OAuth integration
 - Email and password authentication
 - JWT-based access and refresh token system
-- Secure session management
-\n### 2.2 Document Management
-- Create new documents\n- Edit existing documents
-- Delete documents
+- Secure session management\n
+### 2.2 Document Management
+- Create new documents
+- Edit existing documents\n- Delete documents
 - Auto-save functionality
-- Document list dashboard\n
+- Document list dashboard
+- Export documents as .txt or .docx format
+
 ### 2.3 Collaboration Features
 - Invite collaborators via email or shareable link
 - Role-based access control: Owner, Editor, Viewer
 - Real-time multi-user text editing
-- Live cursor indicators with unique colors per user
-- Real-time typing presence indicators (User X is typing…)
-- Live avatars showing connected users
-- User join/leave notifications
-
+- Live cursor indicators with unique colors per user\n- Real-time typing presence indicators (User X is typing…)
+- Live avatars showing connected users\n- User join/leave notifications\n
 ### 2.4 Editor Capabilities
 - Rich text editing support:
   - Bold, italic, underline, strikethrough
-  - Headings\n  - Bullet and numbered lists
-  - Code blocks
-- Font customization:
+  - Headings
+  - Bullet and numbered lists
+  - Code blocks\n- Font customization:
   - Font family selection (Arial, Times New Roman, Courier, Georgia, Verdana, etc.)
   - Font size adjustment (8pt to 72pt)
 - Text styling:
-  - Text color picker\n  - Background/highlight color\n- Text alignment options:
+  - Text color picker
+  - Background/highlight color
+- Text alignment options:
   - Left align
   - Center align
-  - Right align\n  - Justify
+  - Right align
+  - Justify
 - Pre-made text layouts:
   - Title and subtitle templates
   - Header styles
@@ -52,16 +53,12 @@ Provide a seamless collaborative editing experience where teams can work togethe
   - Callout boxes
   - Section dividers
 - Delta-based update system
-- Conflict resolution using Operational Transform or CRDT
-- Keyboard shortcuts (Ctrl+S, Ctrl+Z)
-
+- Conflict resolution using Operational Transform or CRDT\n- Keyboard shortcuts (Ctrl+S, Ctrl+Z)\n
 ### 2.5 Version History
 - Automatic document snapshots at intervals or after N changes
-- View previous versions
-- Compare different versions
+- View previous versions\n- Compare different versions
 - Restore any historical version
-
-### 2.6 Commenting System
+\n### 2.6 Commenting System
 - Inline comments on selected text
 - Threaded comment discussions
 - Resolve and reopen comments
@@ -70,10 +67,10 @@ Provide a seamless collaborative editing experience where teams can work togethe
 ### 2.7 UI/UX Features
 - Dark mode and light mode toggle
 - Responsive design for different window sizes
-- Smooth animations\n- Loading skeletons
+- Smooth animations
+- Loading skeletons
 - Toast notifications
-- Clean and modern interface
-- Formatting toolbar with font and styling controls
+- Clean and modern interface\n- Formatting toolbar with font and styling controls
 - Layout template selector
 - Native Windows window controls (minimize, maximize, close)
 \n---
@@ -115,12 +112,11 @@ Provide a seamless collaborative editing experience where teams can work togethe
 - Formatting toolbar (font selector, size picker, color picker, alignment buttons)
 - Layout template panel
 - Collaborators sidebar
-- Version history modal
-- Comment panel
+- Version history modal\n- Comment panel
 - Invite modal
-- Profile menu
-- System tray integration
+- Profile menu\n- System tray integration
 - Auto-update mechanism
+- Export dialog (with .txt and .docx format options)
 
 ### 4.3 Backend Stack
 - Runtime: Node.js (embedded within Electron)
@@ -134,6 +130,7 @@ Provide a seamless collaborative editing experience where teams can work togethe
 - Collaborator management
 - Version history storage and retrieval
 - Comment management
+- Document export endpoints
 
 ### 4.5 Database Models
 - User
@@ -147,8 +144,7 @@ Provide a seamless collaborative editing experience where teams can work togethe
 - User preferences and settings
 - Session persistence
 
----
-\n## 5. Security Requirements\n
+---\n\n## 5. Security Requirements\n
 ### 5.1 Authentication & Authorization
 - JWT access and refresh tokens
 - Google OAuth integration
@@ -164,15 +160,15 @@ Provide a seamless collaborative editing experience where teams can work togethe
 - Code signing for Windows executable
 - Secure local data encryption
 
----
-\n## 6. Desktop Application Specific Features
+---\n
+## 6. Desktop Application Specific Features
 
 ### 6.1 Windows Integration
 - Native window controls and menus
 - System tray icon with quick actions
 - Windows notifications
-- File association for custom document format\n- Context menu integration
-
+- File association for custom document format
+- Context menu integration\n
 ### 6.2 Offline Capabilities
 - Local document storage
 - Offline editing mode
@@ -191,8 +187,8 @@ Provide a seamless collaborative editing experience where teams can work togethe
 - Optimized rendering for large documents
 - Background process management
 
----
-\n## 7. Project Structure
+---\n
+## 7. Project Structure
 
 ### 7.1 Code Organization
 - Electron main process code
@@ -204,34 +200,34 @@ Provide a seamless collaborative editing experience where teams can work togethe
 
 ### 7.2 Documentation
 - Comprehensive README with setup instructions\n- Sample environment variables
-- API documentation\n- Build and packaging guides
+- API documentation
+- Build and packaging guides
 - Windows installer creation guide
 
 ---
+\n## 8. Build & Distribution
 
-## 8. Build & Distribution
-
-### 8.1 Packaging\n- Electron Builder for Windows .exe generation
-- NSIS installer creation
-- Code signing with valid certificate
-- Application icon and branding
-
+### 8.1 Packaging
+- Electron Builder for Windows .exe generation\n- NSIS installer creation\n- Code signing with valid certificate\n- Application icon and branding\n
 ### 8.2 Distribution Options
 - Direct download from website
 - Microsoft Store submission (optional)
 - Auto-update server setup
-\n### 8.3 Testing Data
+
+### 8.3 Testing Data
 - Seed data for development and testing
 - Sample user accounts
 - Test documents
-\n---
 
-## 9. Bonus Features (Optional)\n
-### 9.1 Advanced Capabilities
+---
+
+## 9. Bonus Features (Optional)
+\n### 9.1 Advanced Capabilities
 - Document export functionality (PDF, DOCX)
 - Activity log tracking (who edited what and when)
 - AI assistant for document summarization
-- Real-time voice chat per document\n- Multiple window support
+- Real-time voice chat per document
+- Multiple window support
 - Customizable keyboard shortcuts
 
 ---
@@ -243,7 +239,8 @@ Provide a seamless collaborative editing experience where teams can work togethe
 - Native Windows look and feel
 - Smooth real-time collaboration experience
 - Intuitive navigation and interactions
-- Easy-to-use formatting controls\n- Fast and responsive application
+- Easy-to-use formatting controls
+- Fast and responsive application
 
 ### 10.2 Technical Quality
 - Scalable architecture
@@ -251,9 +248,9 @@ Provide a seamless collaborative editing experience where teams can work togethe
 - Optimized performance
 - Maintainable codebase
 - Reliable offline functionality
+\n---
 
----
-\n## 11. Deliverables
+## 11. Deliverables
 
 ### 11.1 Code Output
 - Complete Electron application codebase
@@ -262,8 +259,7 @@ Provide a seamless collaborative editing experience where teams can work togethe
 
 ### 11.2 Executable Package
 - Windows .exe installer
-- Portable executable version
-- Code-signed application
+- Portable executable version\n- Code-signed application
 
 ### 11.3 Documentation
 - Setup and installation guide

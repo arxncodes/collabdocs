@@ -12,7 +12,16 @@ import {
   History,
   Save,
   Loader2,
+  Download,
+  FileText,
+  FileType,
 } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import {
   getDocument,
   getDocumentContent,
@@ -42,6 +51,7 @@ import { PresenceIndicator } from '@/components/editor/PresenceIndicator';
 import { VersionHistoryDialog } from '@/components/editor/VersionHistoryDialog';
 import { ShareDialog } from '@/components/editor/ShareDialog';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
+import { exportAsText, exportAsDocx, generateExportFilename } from '@/utils/exportUtils';
 
 const CURSOR_COLORS = [
   '#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899', '#14B8A6', '#F97316',
@@ -209,6 +219,60 @@ export default function EditorPage() {
     [documentId, user, userColor]
   );
 
+  const handleExportText = async () => {
+    if (!content?.content?.html) {
+      toast({
+        title: 'Error',
+        description: 'No content to export',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    try {
+      const filename = generateExportFilename(title || 'Untitled');
+      await exportAsText(content.content.html, filename);
+      toast({
+        title: 'Success',
+        description: 'Document exported as text file',
+      });
+    } catch (error) {
+      console.error('Export error:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to export document',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handleExportDocx = async () => {
+    if (!content?.content?.html) {
+      toast({
+        title: 'Error',
+        description: 'No content to export',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    try {
+      const filename = generateExportFilename(title || 'Untitled');
+      await exportAsDocx(content.content.html, filename);
+      toast({
+        title: 'Success',
+        description: 'Document exported as Word document',
+      });
+    } catch (error) {
+      console.error('Export error:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to export document',
+        variant: 'destructive',
+      });
+    }
+  };
+
   const canEdit = document && user && (document.owner_id === user.id || 
     collaborators.some(c => c.user_id === user.id && (c.role === 'editor' || c.role === 'owner')));
 
@@ -259,6 +323,24 @@ export default function EditorPage() {
               <History className="h-4 w-4 mr-2" />
               History
             </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm">
+                  <Download className="h-4 w-4 mr-2" />
+                  Export
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={handleExportText}>
+                  <FileText className="h-4 w-4 mr-2" />
+                  Export as Text (.txt)
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleExportDocx}>
+                  <FileType className="h-4 w-4 mr-2" />
+                  Export as Word (.docx)
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <Button
               variant={showComments ? 'default' : 'ghost'}
               size="sm"
