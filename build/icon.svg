@@ -1,0 +1,24 @@
+<svg width="256" height="256" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1E40AF;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="128" cy="128" r="120" fill="url(#grad)"/>
+  
+  <!-- Document icon -->
+  <rect x="70" y="60" width="116" height="136" rx="8" fill="white" opacity="0.95"/>
+  
+  <!-- Lines representing text -->
+  <rect x="85" y="80" width="86" height="8" rx="4" fill="#3B82F6" opacity="0.7"/>
+  <rect x="85" y="100" width="86" height="8" rx="4" fill="#3B82F6" opacity="0.5"/>
+  <rect x="85" y="120" width="60" height="8" rx="4" fill="#3B82F6" opacity="0.5"/>
+  
+  <!-- Collaboration indicator (multiple cursors) -->
+  <path d="M 100 150 L 100 170 L 110 165 Z" fill="#10B981"/>
+  <path d="M 120 145 L 120 165 L 130 160 Z" fill="#F59E0B"/>
+  <path d="M 140 150 L 140 170 L 150 165 Z" fill="#EF4444"/>
+</svg>
