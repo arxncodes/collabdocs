@@ -166,6 +166,12 @@
   - [x] Apply migrations to fix policies
   - [x] Verify no infinite recursion error
   - [x] Create INFINITE_RECURSION_FIX.md documentation
+- [x] Step 24: Fix ambiguous user_id column reference in code_collaborators policies
+  - [x] Identify ambiguous column reference error in SELECT policy
+  - [x] Add explicit table qualifiers to all column references
+  - [x] Update all code_collaborators policies (SELECT, INSERT, UPDATE, DELETE)
+  - [x] Apply migration fix_collaborators_policy_explicit_table_names
+  - [x] Verify policies work without ambiguity error
 
 ## Notes
 - Using Supabase for backend (database + auth + real-time)
@@ -299,6 +305,17 @@
 - **Security**: Function is read-only, uses parameterized queries, no SQL injection risk, still enforces ownership and collaboration checks
 - **Testing**: Verified no infinite recursion error when querying code_documents, policies work correctly for owners and collaborators
 - **Documentation**: INFINITE_RECURSION_FIX.md with detailed explanation, implementation steps, testing procedures, security considerations, and troubleshooting guide
+
+## Ambiguous Column Reference Fix
+- **Root Cause**: SQL query in code_collaborators RLS policy referenced user_id without table qualifier, causing ambiguity when PostgreSQL couldn't determine which table's user_id column to use
+- **Error Message**: "column reference 'user_id' is ambiguous" occurred during document creation when INSERT operation triggered SELECT policy to return inserted row
+- **Explicit Table Qualifiers**: Added table name prefixes to all column references in code_collaborators policies (code_collaborators.user_id, code_collaborators.code_document_id, code_documents.id, code_documents.owner_id)
+- **Updated All Policies**: Rewrote SELECT, INSERT, UPDATE, and DELETE policies for code_collaborators with fully qualified column names to eliminate ambiguity
+- **Migration Applied**: fix_collaborators_policy_explicit_table_names migration successfully applied, dropping old policies and recreating with explicit table names
+- **Benefits**: Eliminates ambiguity errors, improves query planner optimization, makes debugging easier, prevents future issues, maintains same security level
+- **Best Practice**: Always use table qualifiers (table_name.column_name) especially with common column names (id, user_id, created_at) and in RLS policies with subqueries
+- **Testing**: Verified policies work without ambiguity error by querying code_collaborators table, confirmed all four policies (SELECT, INSERT, UPDATE, DELETE) are correctly configured
+- **Documentation**: AMBIGUOUS_COLUMN_FIX.md with problem explanation, solution implementation, before/after comparison, best practices, and testing procedures
 
 
 
