@@ -143,6 +143,14 @@
   - [x] Clear Vite cache to remove stale modules
   - [x] Create BROWSER_CACHE_ERROR_FIX.md documentation
   - [x] Run lint and verify code is correct
+- [x] Step 21: Fix code document creation error
+  - [x] Add profile verification before document creation
+  - [x] Create owner as collaborator automatically
+  - [x] Add detailed error logging with error codes
+  - [x] Make content creation non-blocking
+  - [x] Add on-demand content creation in editor
+  - [x] Create CODE_DOCUMENT_CREATION_FIX.md documentation
+  - [x] Run lint and verify all changes
 
 ## Notes
 - Using Supabase for backend (database + auth + real-time)
@@ -252,6 +260,18 @@
 - **Security**: RLS policies for access control, role-based permissions (owner, editor, viewer)
 - **API Functions**: Complete CRUD operations for documents, content, collaborators, comments, versions, and presence
 - **Documentation**: CODE_COLLABORATION_FEATURE.md with complete usage guide, API reference, and troubleshooting
+
+## Code Document Creation Fix
+- **Profile Verification**: Added check to ensure user profile exists before creating code document, preventing foreign key constraint violations
+- **Owner Collaborator Entry**: Automatically creates collaborator entry for owner when document is created, ensuring RLS policies allow content insertion
+- **Detailed Error Logging**: Enhanced error logging with message, details, hint, and code for better debugging and troubleshooting
+- **Non-Blocking Content Creation**: Document creation succeeds even if initial content creation fails, preventing total operation failure
+- **On-Demand Content Creation**: Editor creates content automatically if it doesn't exist, handling edge cases gracefully
+- **Error Handling**: Comprehensive error handling at each step (profile verification, document creation, collaborator creation, content creation)
+- **RLS Policy Compliance**: Ensures all operations comply with Row Level Security policies by creating necessary entries in correct order
+- **Transaction Ordering**: Creates parent records (document) before children (collaborator, content) to avoid race conditions
+- **Graceful Degradation**: Continues operation even if non-critical steps fail, with detailed logging for debugging
+- **Documentation**: CODE_DOCUMENT_CREATION_FIX.md with root cause analysis, changes made, testing steps, debugging guide, and prevention best practices
 
 
 

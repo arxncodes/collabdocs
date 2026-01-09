@@ -766,6 +766,19 @@ export async function getCodeDocument(codeDocumentId: string): Promise<CodeDocum
 }
 
 export async function createCodeDocument(title: string, language: string, ownerId: string): Promise<CodeDocument | null> {
+  // First, verify the user profile exists
+  const { data: profileData, error: profileError } = await supabase
+    .from('profiles')
+    .select('id')
+    .eq('id', ownerId)
+    .maybeSingle();
+
+  if (profileError || !profileData) {
+    console.error('Error verifying profile:', profileError);
+    console.error('Profile not found for user:', ownerId);
+    return null;
+  }
+
   const { data, error } = await supabase
     .from('code_documents')
     .insert({ title, language, owner_id: ownerId })
@@ -774,18 +787,50 @@ export async function createCodeDocument(title: string, language: string, ownerI
 
   if (error) {
     console.error('Error creating code document:', error);
+    console.error('Error details:', {
+      message: error.message,
+      details: error.details,
+      hint: error.hint,
+      code: error.code,
+    });
     return null;
   }
 
-  // Create initial content
+  // Create owner as collaborator
   if (data) {
-    await supabase
+    const { error: collabError } = await supabase
+      .from('code_collaborators')
+      .insert({
+        code_document_id: data.id,
+        user_id: ownerId,
+        role: 'owner',
+      });
+
+    if (collabError) {
+      console.error('Error creating owner collaborator:', collabError);
+      // Continue anyway, owner_id is set on the document
+    }
+
+    // Create initial content
+    const { error: contentError } = await supabase
       .from('code_content')
       .insert({
         code_document_id: data.id,
         content: '',
         updated_by: ownerId,
       });
+
+    if (contentError) {
+      console.error('Error creating initial content:', contentError);
+      console.error('Content error details:', {
+        message: contentError.message,
+        details: contentError.details,
+        hint: contentError.hint,
+        code: contentError.code,
+      });
+      // Don't fail the whole operation if content creation fails
+      // The content can be created later
+    }
   }
 
   return data;

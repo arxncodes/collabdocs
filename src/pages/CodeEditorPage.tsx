@@ -88,15 +88,19 @@ export default function CodeEditorPage() {
   }, [codeDocumentId]);
 
   const loadContent = useCallback(async () => {
-    if (!codeDocumentId) return;
+    if (!codeDocumentId || !user) return;
     const contentData = await getCodeContent(codeDocumentId);
     if (contentData) {
       setContent(contentData);
       if (!currentContent) {
         setCurrentContent(contentData.content);
       }
+    } else {
+      // Content doesn't exist, create it
+      await updateCodeContent(codeDocumentId, '', user.id);
+      setCurrentContent('');
     }
-  }, [codeDocumentId, currentContent]);
+  }, [codeDocumentId, user, currentContent]);
 
   const loadCollaborators = useCallback(async () => {
     if (!codeDocumentId) return;
