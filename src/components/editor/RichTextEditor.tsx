@@ -435,14 +435,14 @@ export function RichTextEditor({ content, onChange, onCursorChange, readOnly = f
       )}
 
       {/* Editor Content */}
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-auto p-4 bg-muted/20">
         <div
           ref={editorRef}
           contentEditable={!readOnly}
           onInput={handleInput}
           onKeyUp={handleCursorMove}
           onClick={handleCursorMove}
-          className="min-h-full p-6 focus:outline-none prose prose-sm max-w-none"
+          className="min-h-[600px] p-8 focus:outline-none prose prose-sm max-w-none bg-[#FFFEF7] dark:bg-[#1A1A1A] border-2 border-[#E8B86D] dark:border-[#D4A574] rounded-lg shadow-sm transition-colors"
           style={{
             fontFamily: currentFont,
             fontSize: currentSize,

@@ -125,6 +125,7 @@
 - Toolbar organized in two rows for better accessibility
 - Color picker with visual color grid
 - Layout picker with preview thumbnails
+- **Distinct Editor Area**: Cream/warm-toned textbox with golden border in light mode, dark textbox with bronze border in dark mode for clear visual distinction
 
 ## Desktop Application (Electron)
 - **Cross-Platform**: Windows, macOS, Linux support
