@@ -32,6 +32,8 @@ export interface DocumentContent {
 }
 
 export interface EditorContent {
+  html?: string;
+  text?: string;
   ops?: Array<{
     insert: string;
     attributes?: {
@@ -41,6 +43,10 @@ export interface EditorContent {
       header?: number;
       list?: 'bullet' | 'ordered';
       'code-block'?: boolean;
+      font?: string;
+      size?: string;
+      color?: string;
+      align?: 'left' | 'center' | 'right' | 'justify';
     };
   }>;
 }
