@@ -46,6 +46,16 @@
 - [x] Step 10: Run lint and fix issues
   - [x] Fixed all TypeScript errors
   - [x] All lint checks passed
+- [x] Step 11: Implement shareable invitation links
+  - [x] Create document_invitations table
+  - [x] Add invitation types to types.ts
+  - [x] Create invitation API functions
+  - [x] Create ShareDialog component
+  - [x] Create InvitationPage component
+  - [x] Update EditorPage with Share button
+  - [x] Add invitation route
+  - [x] Update RouteGuard for public invitation access
+  - [x] Run lint and fix all issues
 
 ## Notes
 - Using Supabase for backend (database + auth + real-time)
@@ -61,4 +71,18 @@
 - Active users shown with colored avatars
 - Comments support threading and resolution
 - Responsive design with resizable panels
+
+## Shareable Invitation Links Feature
+- Document owners can generate shareable invitation links
+- Each link has configurable:
+  - Access role (Editor or Viewer)
+  - Expiration date (in days)
+  - Maximum number of uses (optional)
+- Links can be copied and shared with anyone
+- Recipients can view invitation details before accepting
+- Accept/Decline options for recipients
+- Non-logged-in users are redirected to login, then back to invitation
+- Invitation links are tracked and can be deleted by owner
+- Active invitations displayed in ShareDialog with usage statistics
+
 

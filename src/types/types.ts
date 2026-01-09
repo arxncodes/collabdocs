@@ -94,3 +94,21 @@ export interface DocumentWithAccess extends Document {
   access_role: CollaboratorRole | 'owner';
   collaborators_count?: number;
 }
+
+export type InvitationStatus = 'pending' | 'accepted' | 'declined';
+
+export interface DocumentInvitation {
+  id: string;
+  document_id: string;
+  token: string;
+  role: CollaboratorRole;
+  created_by: string;
+  status: InvitationStatus;
+  accepted_by: string | null;
+  created_at: string;
+  expires_at: string | null;
+  max_uses: number | null;
+  use_count: number;
+  document?: Document;
+  creator?: Profile;
+}

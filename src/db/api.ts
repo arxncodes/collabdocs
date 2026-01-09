@@ -10,6 +10,7 @@ import type {
   CollaboratorRole,
   EditorContent,
   DocumentWithAccess,
+  DocumentInvitation,
 } from '@/types/types';
 
 // ============ Profiles ============
@@ -552,6 +553,165 @@ export async function removePresence(documentId: string, userId: string): Promis
 
   if (error) {
     console.error('Error removing presence:', error);
+    return false;
+  }
+  return true;
+}
+
+// ============ Document Invitations ============
+export async function createInvitation(
+  documentId: string,
+  role: CollaboratorRole,
+  createdBy: string,
+  expiresInDays?: number,
+  maxUses?: number
+): Promise<DocumentInvitation | null> {
+  const token = crypto.randomUUID();
+  const expiresAt = expiresInDays 
+    ? new Date(Date.now() + expiresInDays * 24 * 60 * 60 * 1000).toISOString()
+    : null;
+
+  const { data, error } = await supabase
+    .from('document_invitations')
+    .insert({
+      document_id: documentId,
+      token,
+      role,
+      created_by: createdBy,
+      expires_at: expiresAt,
+      max_uses: maxUses || null,
+    })
+    .select()
+    .maybeSingle();
+
+  if (error) {
+    console.error('Error creating invitation:', error);
+    return null;
+  }
+  return data;
+}
+
+export async function getInvitationByToken(token: string): Promise<DocumentInvitation | null> {
+  const { data, error } = await supabase
+    .from('document_invitations')
+    .select(`
+      *,
+      document:documents!document_invitations_document_id_fkey(
+        *,
+        owner:profiles!documents_owner_id_fkey(id, username, email, avatar_url)
+      ),
+      creator:profiles!document_invitations_created_by_fkey(id, username, email, avatar_url)
+    `)
+    .eq('token', token)
+    .maybeSingle();
+
+  if (error) {
+    console.error('Error fetching invitation:', error);
+    return null;
+  }
+  return data;
+}
+
+export async function getDocumentInvitations(documentId: string): Promise<DocumentInvitation[]> {
+  const { data, error } = await supabase
+    .from('document_invitations')
+    .select(`
+      *,
+      creator:profiles!document_invitations_created_by_fkey(id, username, email, avatar_url)
+    `)
+    .eq('document_id', documentId)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching invitations:', error);
+    return [];
+  }
+  return Array.isArray(data) ? data : [];
+}
+
+export async function acceptInvitation(
+  invitationId: string,
+  token: string,
+  userId: string
+): Promise<{ success: boolean; collaborator?: Collaborator }> {
+  // Get invitation details
+  const invitation = await getInvitationByToken(token);
+  
+  if (!invitation) {
+    return { success: false };
+  }
+
+  // Check if expired
+  if (invitation.expires_at && new Date(invitation.expires_at) < new Date()) {
+    return { success: false };
+  }
+
+  // Check if max uses reached
+  if (invitation.max_uses && invitation.use_count >= invitation.max_uses) {
+    return { success: false };
+  }
+
+  // Check if user is already a collaborator
+  const { data: existing } = await supabase
+    .from('collaborators')
+    .select('id')
+    .eq('document_id', invitation.document_id)
+    .eq('user_id', userId)
+    .maybeSingle();
+
+  if (existing) {
+    return { success: false };
+  }
+
+  // Add as collaborator
+  const collaborator = await addCollaborator(
+    invitation.document_id,
+    userId,
+    invitation.role,
+    invitation.created_by
+  );
+
+  if (!collaborator) {
+    return { success: false };
+  }
+
+  // Update invitation
+  await supabase
+    .from('document_invitations')
+    .update({
+      status: 'accepted',
+      accepted_by: userId,
+      use_count: invitation.use_count + 1,
+    })
+    .eq('id', invitationId);
+
+  return { success: true, collaborator };
+}
+
+export async function declineInvitation(invitationId: string, userId: string): Promise<boolean> {
+  const { error } = await supabase
+    .from('document_invitations')
+    .update({
+      status: 'declined',
+      accepted_by: userId,
+    })
+    .eq('id', invitationId);
+
+  if (error) {
+    console.error('Error declining invitation:', error);
+    return false;
+  }
+  return true;
+}
+
+export async function deleteInvitation(invitationId: string): Promise<boolean> {
+  const { error } = await supabase
+    .from('document_invitations')
+    .delete()
+    .eq('id', invitationId);
+
+  if (error) {
+    console.error('Error deleting invitation:', error);
     return false;
   }
   return true;

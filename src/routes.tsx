@@ -3,6 +3,7 @@ import DashboardPage from './pages/DashboardPage';
 import EditorPage from './pages/EditorPage';
 import AdminPage from './pages/AdminPage';
 import ProfilePage from './pages/ProfilePage';
+import InvitationPage from './pages/InvitationPage';
 import NotFound from './pages/NotFound';
 import type { ReactNode } from 'react';
 
@@ -29,6 +30,12 @@ const routes: RouteConfig[] = [
     name: 'Editor',
     path: '/editor/:documentId',
     element: <EditorPage />,
+    visible: false,
+  },
+  {
+    name: 'Invitation',
+    path: '/invite/:token',
+    element: <InvitationPage />,
     visible: false,
   },
   {

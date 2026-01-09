@@ -40,6 +40,7 @@ import { CollaboratorsSidebar } from '@/components/editor/CollaboratorsSidebar';
 import { CommentsPanel } from '@/components/editor/CommentsPanel';
 import { PresenceIndicator } from '@/components/editor/PresenceIndicator';
 import { VersionHistoryDialog } from '@/components/editor/VersionHistoryDialog';
+import { ShareDialog } from '@/components/editor/ShareDialog';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 
 const CURSOR_COLORS = [
@@ -64,6 +65,7 @@ export default function EditorPage() {
   const [showCollaborators, setShowCollaborators] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const [showVersionHistory, setShowVersionHistory] = useState(false);
+  const [showShareDialog, setShowShareDialog] = useState(false);
   const [cursorPosition, setCursorPosition] = useState(0);
   const [userColor] = useState(() => CURSOR_COLORS[Math.floor(Math.random() * CURSOR_COLORS.length)]);
 
@@ -266,12 +268,20 @@ export default function EditorPage() {
               Comments
             </Button>
             <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowShareDialog(true)}
+            >
+              <Users className="h-4 w-4 mr-2" />
+              Share
+            </Button>
+            <Button
               variant={showCollaborators ? 'default' : 'ghost'}
               size="sm"
               onClick={() => setShowCollaborators(!showCollaborators)}
             >
               <Users className="h-4 w-4 mr-2" />
-              Share
+              Collaborators
             </Button>
           </div>
         </div>
@@ -342,6 +352,15 @@ export default function EditorPage() {
           loadContent();
           loadVersions();
         }}
+      />
+
+      {/* Share Dialog */}
+      <ShareDialog
+        open={showShareDialog}
+        onOpenChange={setShowShareDialog}
+        documentId={documentId!}
+        documentTitle={document.title}
+        currentUserId={user?.id || ''}
       />
     </div>
   );
