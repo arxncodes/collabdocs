@@ -8,8 +8,9 @@
 
 ## The Problem
 
-### Original Policy
+### Issue 1: Ambiguous Column in Policy
 
+**Original Policy**:
 ```sql
 CREATE POLICY "Users can view collaborators of their documents"
 ON code_collaborators
@@ -22,14 +23,49 @@ USING (
 );
 ```
 
+### Issue 2: Ambiguous Column in Function
+
+**Original Function**:
+```sql
+CREATE FUNCTION user_has_code_document_access(doc_id UUID, user_id UUID)
+RETURNS BOOLEAN AS $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM code_documents 
+    WHERE id = doc_id AND owner_id = user_id  -- ❌ Ambiguous!
+  ) THEN
+    RETURN TRUE;
+  END IF;
+  
+  IF EXISTS (
+    SELECT 1 FROM code_collaborators 
+    WHERE code_document_id = doc_id AND user_id = user_id  -- ❌ Ambiguous!
+  ) THEN
+    RETURN TRUE;
+  END IF;
+  
+  RETURN FALSE;
+END;
+$$;
+```
+
 ### Why It's Ambiguous
 
-When PostgreSQL executes this policy:
-1. It needs to check `user_id = auth.uid()`
+**In Policies**:
+1. PostgreSQL needs to check `user_id = auth.uid()`
 2. But `user_id` could refer to:
    - `code_collaborators.user_id` (intended)
    - Any other table's `user_id` in the query context
 3. PostgreSQL can't determine which one, so it throws an error
+
+**In Functions**:
+1. The function parameter is named `user_id`
+2. The table columns are also named `user_id`
+3. When checking `WHERE user_id = user_id`, PostgreSQL doesn't know if you mean:
+   - Function parameter `user_id` = table column `user_id`
+   - Table column `user_id` = function parameter `user_id`
+   - Or even worse: table column = table column (always true!)
+4. This creates ambiguity and errors
 
 ## The Solution
 
@@ -94,28 +130,63 @@ USING (
 );
 ```
 
+### Fixed Function
+
+```sql
+CREATE OR REPLACE FUNCTION user_has_code_document_access(doc_id UUID, user_id UUID)
+RETURNS BOOLEAN
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+BEGIN
+  -- Check if user is owner (with explicit table qualifiers)
+  IF EXISTS (
+    SELECT 1 FROM code_documents 
+    WHERE code_documents.id = doc_id 
+    AND code_documents.owner_id = user_id  -- ✅ Explicit table name
+  ) THEN
+    RETURN TRUE;
+  END IF;
+  
+  -- Check if user is collaborator (with explicit table qualifiers)
+  IF EXISTS (
+    SELECT 1 FROM code_collaborators 
+    WHERE code_collaborators.code_document_id = doc_id 
+    AND code_collaborators.user_id = user_id  -- ✅ Explicit table name
+  ) THEN
+    RETURN TRUE;
+  END IF;
+  
+  RETURN FALSE;
+END;
+$$;
+```
+
 ## Changes Made
 
-### Migration Applied
+### Migrations Applied
 
-**Name**: `fix_collaborators_policy_explicit_table_names`
+**Migration 1**: `fix_collaborators_policy_explicit_table_names`
+- Dropped all existing code_collaborators policies
+- Recreated with fully qualified column names
 
-**Actions**:
-1. ✅ Dropped all existing code_collaborators policies
-2. ✅ Recreated with fully qualified column names
-3. ✅ Added explicit table prefixes to all column references
+**Migration 2**: `fix_ambiguous_user_id_in_access_function_v2`
+- Updated user_has_code_document_access function
+- Added explicit table qualifiers to all column references
 
 ### What Changed
 
-**Before**:
-- `user_id = auth.uid()` ❌
-- `code_document_id IN (...)` ❌
+**In Policies**:
+- `user_id = auth.uid()` → `code_collaborators.user_id = auth.uid()` ✅
+- `code_document_id IN (...)` → `code_collaborators.code_document_id IN (...)` ✅
+- `id` → `code_documents.id` ✅
+- `owner_id = auth.uid()` → `code_documents.owner_id = auth.uid()` ✅
 
-**After**:
-- `code_collaborators.user_id = auth.uid()` ✅
-- `code_collaborators.code_document_id IN (...)` ✅
-- `code_documents.id` ✅
-- `code_documents.owner_id = auth.uid()` ✅
+**In Function**:
+- `WHERE id = doc_id` → `WHERE code_documents.id = doc_id` ✅
+- `AND owner_id = user_id` → `AND code_documents.owner_id = user_id` ✅
+- `WHERE code_document_id = doc_id` → `WHERE code_collaborators.code_document_id = doc_id` ✅
+- `AND user_id = user_id` → `AND code_collaborators.user_id = user_id` ✅
 
 ## Benefits
 

@@ -172,6 +172,10 @@
   - [x] Update all code_collaborators policies (SELECT, INSERT, UPDATE, DELETE)
   - [x] Apply migration fix_collaborators_policy_explicit_table_names
   - [x] Verify policies work without ambiguity error
+  - [x] Fix ambiguous user_id in user_has_code_document_access function
+  - [x] Add explicit table qualifiers to function queries
+  - [x] Apply migration fix_ambiguous_user_id_in_access_function_v2
+  - [x] Verify function works without ambiguity error
 
 ## Notes
 - Using Supabase for backend (database + auth + real-time)
@@ -308,13 +312,16 @@
 
 ## Ambiguous Column Reference Fix
 - **Root Cause**: SQL query in code_collaborators RLS policy referenced user_id without table qualifier, causing ambiguity when PostgreSQL couldn't determine which table's user_id column to use
+- **Secondary Issue**: user_has_code_document_access function also had ambiguous user_id references where function parameter name conflicted with table column names
 - **Error Message**: "column reference 'user_id' is ambiguous" occurred during document creation when INSERT operation triggered SELECT policy to return inserted row
 - **Explicit Table Qualifiers**: Added table name prefixes to all column references in code_collaborators policies (code_collaborators.user_id, code_collaborators.code_document_id, code_documents.id, code_documents.owner_id)
 - **Updated All Policies**: Rewrote SELECT, INSERT, UPDATE, and DELETE policies for code_collaborators with fully qualified column names to eliminate ambiguity
-- **Migration Applied**: fix_collaborators_policy_explicit_table_names migration successfully applied, dropping old policies and recreating with explicit table names
+- **Fixed Function**: Updated user_has_code_document_access function to use explicit table qualifiers (code_documents.id, code_documents.owner_id, code_collaborators.code_document_id, code_collaborators.user_id)
+- **Function Parameter Conflict**: The function parameter named user_id was conflicting with table columns, resolved by qualifying all column references with table names
+- **Migrations Applied**: fix_collaborators_policy_explicit_table_names and fix_ambiguous_user_id_in_access_function_v2 migrations successfully applied
 - **Benefits**: Eliminates ambiguity errors, improves query planner optimization, makes debugging easier, prevents future issues, maintains same security level
 - **Best Practice**: Always use table qualifiers (table_name.column_name) especially with common column names (id, user_id, created_at) and in RLS policies with subqueries
-- **Testing**: Verified policies work without ambiguity error by querying code_collaborators table, confirmed all four policies (SELECT, INSERT, UPDATE, DELETE) are correctly configured
+- **Testing**: Verified policies and function work without ambiguity error by querying code_documents and code_collaborators tables, confirmed all policies are correctly configured
 - **Documentation**: AMBIGUOUS_COLUMN_FIX.md with problem explanation, solution implementation, before/after comparison, best practices, and testing procedures
 
 
