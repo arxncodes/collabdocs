@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { FileText, Users, Menu, LogOut, User, Moon, Sun, Code2 } from 'lucide-react';
+import { FileText, Users, Menu, LogOut, User, Moon, Sun } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
@@ -42,7 +42,6 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
   const navItems = [
     { path: '/dashboard', label: 'My Documents', icon: FileText },
-    { path: '/codes', label: 'My Codes', icon: Code2 },
     ...(profile?.role === 'admin' ? [{ path: '/admin', label: 'Admin', icon: Users }] : []),
   ];
 

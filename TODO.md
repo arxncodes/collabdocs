@@ -176,6 +176,13 @@
   - [x] Add explicit table qualifiers to function queries
   - [x] Apply migration fix_ambiguous_user_id_in_access_function_v2
   - [x] Verify function works without ambiguity error
+- [x] Step 25: Remove code collaboration feature
+  - [x] Remove CodeDashboardPage and CodeEditorPage imports from routes.tsx
+  - [x] Remove code routes (/codes and /code/:codeDocumentId) from routes array
+  - [x] Remove Code2 icon import from AppLayout.tsx
+  - [x] Remove "My Codes" navigation item from navItems array
+  - [x] Delete CodeDashboardPage.tsx and CodeEditorPage.tsx files
+  - [x] Run lint and verify no errors (89 files checked)
 
 ## Notes
 - Using Supabase for backend (database + auth + real-time)
