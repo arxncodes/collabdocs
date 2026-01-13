@@ -1,5 +1,6 @@
 export type UserRole = 'user' | 'admin';
 export type CollaboratorRole = 'owner' | 'editor' | 'viewer';
+export type SubscriptionTier = 'free' | 'premium';
 
 export interface Profile {
   id: string;
@@ -7,6 +8,8 @@ export interface Profile {
   email: string | null;
   role: UserRole;
   avatar_url: string | null;
+  subscription_tier: SubscriptionTier;
+  subscription_expires_at: string | null;
   created_at: string;
   updated_at: string;
 }
