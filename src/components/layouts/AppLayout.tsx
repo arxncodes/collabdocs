@@ -9,7 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { FileText, Users, Menu, LogOut, User, Moon, Sun } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -128,6 +128,9 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="flex items-center gap-2">
                     <Avatar className="h-8 w-8">
+                      {profile?.avatar_url && (
+                        <AvatarImage src={profile.avatar_url} alt={profile.username || 'User'} />
+                      )}
                       <AvatarFallback className="bg-primary text-primary-foreground">
                         {profile?.username?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase() || 'U'}
                       </AvatarFallback>
