@@ -186,3 +186,18 @@ export interface CodeDocumentWithAccess extends CodeDocument {
   access_role: CollaboratorRole | 'owner';
   collaborators_count?: number;
 }
+
+// Content Library Types
+export type ContentCategory = 'blog' | 'topic' | 'paragraph' | 'text' | 'code' | 'quote' | 'link';
+
+export interface ContentSnippet {
+  id: string;
+  user_id: string;
+  title: string;
+  content: string;
+  category: ContentCategory;
+  tags: string[];
+  created_at: string;
+  updated_at: string;
+}
+

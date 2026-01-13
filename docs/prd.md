@@ -19,76 +19,89 @@ Provide a seamless collaborative editing experience where teams can work togethe
 - JWT-based access and refresh token system\n- Secure session management
 
 ### 2.2 User Profile Management
-- Profile picture upload functionality:\n  - Hover over profile picture circle in profile settings to reveal upload button
+- Profile picture upload functionality:
+  - Hover over profile picture circle in profile settings to reveal upload button
   - Click to upload new profile picture
-  - Support common image formats (JPG, PNG, GIF)\n  - Image preview before confirmation
+  - Support common image formats (JPG, PNG, GIF)
+  - Image preview before confirmation
   - Automatic image optimization and cropping
-- Edit profile information\n- View account details
-\n### 2.3 Document Management
-- Create new documents\n- Edit existing documents
+- Edit profile information
+- View account details
+
+### 2.3 Document Management
+- Create new documents
+- Edit existing documents
 - Delete documents
 - Auto-save functionality
-- Document list dashboard\n- Export documents as .txt or .docx format
+- Document list dashboard
+- Export documents as .txt or .docx format
 
 ### 2.4 Collaboration Features
 - Invite collaborators via email or shareable link
 - Role-based access control: Owner, Editor, Viewer
-- Real-time multi-user text editing
-- Live cursor indicators with unique colors per user
+- Real-time multi-user text editing\n- Live cursor indicators with unique colors per user
 - Real-time typing presence indicators (User X is typing…)
 - Live avatars showing connected users
 - User join/leave notifications
 
-### 2.5 Editor Capabilities
-- Rich text editing support:\n  - Bold, italic, underline, strikethrough
+### 2.5 Editor Capabilities\n- Rich text editing support:
+  - Bold, italic, underline, strikethrough
   - Headings
   - Bullet and numbered lists
   - Code blocks
 - Font customization:
   - Font family selection (Arial, Times New Roman, Courier, Georgia, Verdana, etc.)
-  - Font size adjustment (8pt to 72pt)
-- Text styling:
+  - Font size adjustment (8pt to 72pt)\n- Text styling:
   - Text color picker
   - Background/highlight color
 - Text alignment options:
-  - Left align
-  - Center align
+  - Left align\n  - Center align
   - Right align
   - Justify
 - Pre-made text layouts:
   - Title and subtitle templates
-  - Header styles
-  - Quote blocks
+  - Header styles\n  - Quote blocks
   - Callout boxes
   - Section dividers
 - Delta-based update system
 - Conflict resolution using Operational Transform or CRDT
 - Keyboard shortcuts (Ctrl+S, Ctrl+Z)
 
-### 2.6 Version History\n- Automatic document snapshots at intervals or after N changes
+### 2.6 Version History
+- Automatic document snapshots at intervals or after N changes
 - View previous versions
 - Compare different versions
 - Restore any historical version
 
 ### 2.7 Commenting System
-- Inline comments on selected text\n- Threaded comment discussions\n- Resolve and reopen comments
-- Comment markers visible in editor
+- Inline comments on selected text
+- Threaded comment discussions
+- Resolve and reopen comments\n- Comment markers visible in editor\n
+### 2.8 Content Search and Copy Feature
+- Side panel in dashboard with integrated search functionality
+- Search and browse external content sources:\n  - Blogs
+  - Topics
+  - Paragraphs
+  - Text snippets
+  - Articles
+- Search results display with preview
+- One-click copy functionality for selected content
+- Paste directly into document editor
+- Search history tracking
+- Bookmarking favorite content sources
 
-### 2.8 Premium Subscription Features
+### 2.9 Premium Subscription Features
 - Advanced document templates library
 - Unlimited version history (free users limited to 30 days)
 - Priority customer support
-- Advanced export options (PDF with custom formatting, Markdown)\n- AI-powered writing assistant and grammar checker
-- Custom branding (remove app watermark)
-- Increased storage capacity (free users limited to 5GB)
-- Advanced collaboration analytics and activity reports
-- Offline mode with extended capabilities
-- Custom keyboard shortcuts configuration
-- Document encryption for sensitive files
-- Integration with third-party services (Dropbox, Google Drive, OneDrive)
+- Advanced export options (PDF with custom formatting, Markdown)
+- AI-powered writing assistant and grammar checker
+- Custom branding (remove app watermark)\n- Increased storage capacity (free users limited to 5GB)
+- Advanced collaboration analytics and activity reports\n- Offline mode with extended capabilities
+- Custom keyboard shortcuts configuration\n- Document encryption for sensitive files\n- Integration with third-party services (Dropbox, Google Drive, OneDrive)
 - Premium badge display on profile
 
-### 2.9 UI/UX Features
+### 2.10 UI/UX Features
 - Dark mode and light mode toggle
 - Responsive design for different window sizes
 - Smooth animations
@@ -137,13 +150,13 @@ Provide a seamless collaborative editing experience where teams can work togethe
 - Invite modal
 - Profile menu with profile picture upload
 - Premium subscription management panel
-- Payment integration interface
-- System tray integration
+- Payment integration interface\n- System tray integration
 - Auto-update mechanism
 - Export dialog (with .txt and .docx format options)
+- Content search side panel with copy/paste functionality
 
-### 4.3 Sidebar Navigation
-- Admin button (for admin users)\n- My Documents button
+### 4.3 Sidebar Navigation\n- Admin button (for admin users)
+- My Documents button
 - Settings
 - Profile
 - Subscription status indicator (Free/Premium)
@@ -155,15 +168,16 @@ Provide a seamless collaborative editing experience where teams can work togethe
 - Real-time: Socket.IO
 - File storage: AWS S3 or similar for profile pictures
 
-### 4.5 API Endpoints
-- Authentication routes
+### 4.5 API Endpoints\n- Authentication routes
 - Document CRUD operations
 - Collaborator management
 - Version history storage and retrieval
-- Comment management\n- Document export endpoints
+- Comment management
+- Document export endpoints
 - Profile picture upload and management
 - Subscription management endpoints
 - Payment processing integration
+- Content search API integration
 
 ### 4.6 Database Models
 - User (with profile picture URL and subscription status)
@@ -172,13 +186,14 @@ Provide a seamless collaborative editing experience where teams can work togethe
 - Comment
 - Collaboration (roles and permissions)
 - Subscription (plan type, status, expiry date)
-- Payment (transaction history)
+- Payment (transaction history)\n- SearchHistory (user search queries and bookmarks)
 
 ### 4.7 Local Storage
 - Offline document caching
 - User preferences and settings
 - Session persistence
 - Cached profile pictures
+- Search history cache
 
 ---
 \n## 5. Security Requirements\n
@@ -192,28 +207,30 @@ Provide a seamless collaborative editing experience where teams can work togethe
 
 ### 5.2 Security Measures
 - API rate limiting
-- Input sanitization to prevent XSS attacks\n- Secure environment variable management\n- HTTPS enforcement for all network communications
+- Input sanitization to prevent XSS attacks
+- Secure environment variable management
+- HTTPS enforcement for all network communications
 - Code signing for Windows executable
 - Secure local data encryption
 - Secure payment processing (PCI DSS compliance)
 - Profile picture file validation and sanitization
 
----\n
-## 6. Desktop Application Specific Features
+---
 
-### 6.1 Windows Integration
+## 6. Desktop Application Specific Features
+\n### 6.1 Windows Integration
 - Native window controls and menus
 - System tray icon with quick actions
 - Windows notifications
 - File association for custom document format
-- Context menu integration\n
+- Context menu integration
+
 ### 6.2 Offline Capabilities
 - Local document storage
 - Offline editing mode
 - Automatic sync when connection restored
 - Conflict resolution for offline changes
-
-### 6.3 Auto-Update System
+\n### 6.3 Auto-Update System
 - Automatic update checks
 - Background download of updates
 - User notification for available updates
@@ -225,7 +242,8 @@ Provide a seamless collaborative editing experience where teams can work togethe
 - Optimized rendering for large documents
 - Background process management
 
----\n
+---
+
 ## 7. Project Structure
 
 ### 7.1 Code Organization
@@ -236,33 +254,36 @@ Provide a seamless collaborative editing experience where teams can work togethe
 - Clean code with inline comments
 - Environment variable support
 
-### 7.2 Documentation
-- Comprehensive README with setup instructions\n- Sample environment variables
+### 7.2 Documentation\n- Comprehensive README with setup instructions
+- Sample environment variables
 - API documentation
 - Build and packaging guides
 - Windows installer creation guide
 
 ---
-\n## 8. Build & Distribution
+
+## 8. Build & Distribution
 
 ### 8.1 Packaging
-- Electron Builder for Windows .exe generation\n- NSIS installer creation\n- Code signing with valid certificate\n- Application icon and branding\n
+- Electron Builder for Windows .exe generation
+- NSIS installer creation
+- Code signing with valid certificate
+- Application icon and branding
+
 ### 8.2 Distribution Options
 - Direct download from website
 - Microsoft Store submission (optional)
 - Auto-update server setup
 
-### 8.3 Testing Data
-- Seed data for development and testing
-- Sample user accounts
-- Test documents
+### 8.3 Testing Data\n- Seed data for development and testing
+- Sample user accounts\n- Test documents
 
 ---
 
 ## 9. Bonus Features (Optional)
-\n### 9.1 Advanced Capabilities
-- Document export functionality (PDF, DOCX)
-- Activity log tracking (who edited what and when)
+
+### 9.1 Advanced Capabilities
+- Document export functionality (PDF, DOCX)\n- Activity log tracking (who edited what and when)
 - AI assistant for document summarization
 - Real-time voice chat per document
 - Multiple window support
@@ -272,15 +293,13 @@ Provide a seamless collaborative editing experience where teams can work togethe
 
 ## 10. Design Goals
 
-### 10.1 User Experience
-- Clean and modern UI design
-- Native Windows look and feel
-- Smooth real-time collaboration experience
+### 10.1 User Experience\n- Clean and modern UI design\n- Native Windows look and feel\n- Smooth real-time collaboration experience
 - Intuitive navigation and interactions
 - Easy-to-use formatting controls
 - Fast and responsive application
 - Seamless profile picture upload experience
 - Clear premium feature differentiation
+- Efficient content search and copy workflow
 
 ### 10.2 Technical Quality
 - Scalable architecture
