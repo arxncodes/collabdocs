@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import * as React from 'react';
 import { Crown, Lock } from 'lucide-react';
 import {
   Dialog,
@@ -140,6 +141,3 @@ export function PremiumFeatureLock({
     </>
   );
 }
-
-// Add React import
-import * as React from 'react';
