@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
-import { Plus, FileText, Users, Clock, Trash2, Library, X } from 'lucide-react';
+import { Plus, FileText, Users, Clock, Trash2 } from 'lucide-react';
 import { getMyDocuments, getSharedDocuments, createDocument, deleteDocument } from '@/db/api';
 import type { DocumentWithAccess } from '@/types/types';
 import {
@@ -23,7 +23,6 @@ import {
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { ContentLibrary } from '@/components/ContentLibrary';
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -37,7 +36,6 @@ export default function DashboardPage() {
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [newDocTitle, setNewDocTitle] = useState('');
   const [creating, setCreating] = useState(false);
-  const [showContentLibrary, setShowContentLibrary] = useState(false);
 
   useEffect(() => {
     loadDocuments();
@@ -182,30 +180,17 @@ export default function DashboardPage() {
 
   return (
     <AppLayout>
-      <div className="flex h-full">
-        {/* Main Content */}
-        <div className="flex-1 overflow-auto">
-          <div className="container mx-auto p-6 max-w-7xl">
-            <div className="flex items-center justify-between mb-8">
-              <div>
-                <h1 className="text-3xl font-bold">My Documents</h1>
-                <p className="text-muted-foreground mt-1">Create and manage your collaborative documents</p>
-              </div>
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  onClick={() => setShowContentLibrary(!showContentLibrary)}
-                  className="gap-2"
-                >
-                  <Library className="h-4 w-4" />
-                  <span className="hidden sm:inline">Content Library</span>
-                </Button>
-                <Button onClick={() => setCreateDialogOpen(true)}>
-                  <Plus className="mr-2 h-4 w-4" />
-                  New Document
-                </Button>
-              </div>
-            </div>
+      <div className="container mx-auto p-6 max-w-7xl">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-bold">My Documents</h1>
+            <p className="text-muted-foreground mt-1">Create and manage your collaborative documents</p>
+          </div>
+          <Button onClick={() => setCreateDialogOpen(true)}>
+            <Plus className="mr-2 h-4 w-4" />
+            New Document
+          </Button>
+        </div>
 
         <Tabs defaultValue="my-documents" className="w-full">
           <TabsList>
@@ -267,8 +252,7 @@ export default function DashboardPage() {
             )}
           </TabsContent>
         </Tabs>
-          </div>
-        </div>
+      </div>
 
       {/* Create Document Dialog */}
       <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
@@ -321,24 +305,6 @@ export default function DashboardPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-
-      {/* Content Library Side Panel */}
-      {showContentLibrary && (
-        <div className="w-96 border-l border-border bg-card shrink-0 flex flex-col relative">
-          <div className="absolute top-2 right-2 z-10">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setShowContentLibrary(false)}
-              className="h-8 w-8"
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          </div>
-          <ContentLibrary />
-        </div>
-      )}
-      </div>
     </AppLayout>
   );
 }
