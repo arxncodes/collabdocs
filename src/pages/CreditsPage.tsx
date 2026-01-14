@@ -83,6 +83,21 @@ export default function CreditsPage() {
                 </div>
 
                 <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors">
+                  <Github className="h-5 w-5 text-primary" />
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">GitHub</p>
+                    <a
+                      href="https://github.com/arxncodes"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-primary hover:underline"
+                    >
+                      github.com/arxncodes
+                    </a>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors">
                   <Globe className="h-5 w-5 text-primary" />
                   <div className="flex-1">
                     <p className="text-sm font-medium">Developer</p>
@@ -91,14 +106,24 @@ export default function CreditsPage() {
                 </div>
               </div>
 
-              {/* Contact Button */}
-              <Button
-                className="w-full gap-2"
-                onClick={() => window.location.href = 'mailto:aryanaditya8439@gmail.com'}
-              >
-                <Mail className="h-4 w-4" />
-                Get in Touch
-              </Button>
+              {/* Contact Buttons */}
+              <div className="flex gap-2">
+                <Button
+                  className="flex-1 gap-2"
+                  onClick={() => window.location.href = 'mailto:aryanaditya8439@gmail.com'}
+                >
+                  <Mail className="h-4 w-4" />
+                  Email Me
+                </Button>
+                <Button
+                  variant="outline"
+                  className="flex-1 gap-2"
+                  onClick={() => window.open('https://github.com/arxncodes', '_blank')}
+                >
+                  <Github className="h-4 w-4" />
+                  GitHub
+                </Button>
+              </div>
             </CardContent>
           </Card>
 

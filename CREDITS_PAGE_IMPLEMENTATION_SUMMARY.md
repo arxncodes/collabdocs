@@ -8,6 +8,7 @@ Successfully implemented a comprehensive Credits page that showcases the develop
 
 - **Name**: arxncodes
 - **Email**: aryanaditya8439@gmail.com
+- **GitHub**: github.com/arxncodes
 - **Role**: Lead Developer
 
 ## Implementation Details
@@ -127,11 +128,17 @@ Successfully implemented a comprehensive Credits page that showcases the develop
 
 ### Email Integration
 1. **Clickable Email**: Opens default email client
-2. **Get in Touch Button**: Primary CTA for contact
+2. **Email Me Button**: Primary CTA for email contact
 3. **Email Display**: Shows email in contact card
+
+### GitHub Integration
+1. **Clickable GitHub Link**: Opens GitHub profile in new tab
+2. **GitHub Button**: Secondary CTA for GitHub profile
+3. **GitHub Display**: Shows GitHub username in contact card
 
 ### Contact Flow
 ```
+Email:
 User clicks email/button
     ↓
 Email client opens
@@ -141,6 +148,15 @@ Pre-filled recipient: aryanaditya8439@gmail.com
 User writes message
     ↓
 Send email
+
+GitHub:
+User clicks GitHub link/button
+    ↓
+New tab opens
+    ↓
+GitHub profile loads: github.com/arxncodes
+    ↓
+User views projects and profile
 ```
 
 ## Navigation Access
@@ -256,6 +272,7 @@ Documentation/
 ### Implementation
 - ✅ Developer name displayed: arxncodes
 - ✅ Contact email displayed: aryanaditya8439@gmail.com
+- ✅ GitHub profile displayed: github.com/arxncodes
 - ✅ All 6 technologies showcased
 - ✅ All 4 features highlighted
 - ✅ Navigation accessible
@@ -289,11 +306,12 @@ The Credits page implementation is **complete and production-ready**. Users can 
 
 1. ✅ Learn about the developer (arxncodes)
 2. ✅ Contact via email (aryanaditya8439@gmail.com)
-3. ✅ See technologies used
-4. ✅ Understand key features
-5. ✅ Access easily from profile menu
-6. ✅ View on any device (responsive)
-7. ✅ Navigate with keyboard (accessible)
+3. ✅ Visit GitHub profile (github.com/arxncodes)
+4. ✅ See technologies used
+5. ✅ Understand key features
+6. ✅ Access easily from profile menu
+7. ✅ View on any device (responsive)
+8. ✅ Navigate with keyboard (accessible)
 
 **Status**: ✅ Fully Implemented
 **Quality**: ✅ Production Ready

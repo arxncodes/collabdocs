@@ -21,12 +21,15 @@
 - **Name**: arxncodes
 - **Role**: Lead Developer
 - **Email**: aryanaditya8439@gmail.com
+- **GitHub**: github.com/arxncodes
 - Professional bio and background
 
 ### Contact the Developer
 - Click the email address to send an email
-- Use the "Get in Touch" button for quick contact
-- Email client will open automatically
+- Use the "Email Me" button for quick contact
+- Click the "GitHub" button to visit the profile
+- Email client will open automatically for email
+- GitHub opens in a new tab
 
 ### About the Application
 - Learn about CollabDocs features
@@ -76,11 +79,14 @@ The Credits page showcases all the modern technologies used to build CollabDocs:
 ### Developer Details
 - **Name**: arxncodes
 - **Email**: aryanaditya8439@gmail.com
+- **GitHub**: github.com/arxncodes
 
 ### How to Contact
 1. **Email**: Click the email link on the Credits page
 2. **Direct Email**: Send to aryanaditya8439@gmail.com
-3. **Get in Touch Button**: Use the button for quick contact
+3. **Email Me Button**: Use the button for quick contact
+4. **GitHub**: Visit github.com/arxncodes
+5. **GitHub Button**: Click to open profile in new tab
 
 ### What to Contact About
 - ✅ Bug reports
@@ -120,8 +126,11 @@ The Credits page showcases all the modern technologies used to build CollabDocs:
 ├─────────────────────────────────────┤
 │  👨‍💻 arxncodes                       │
 │  Lead Developer                     │
-│  aryanaditya8439@gmail.com          │
-│  [Get in Touch]                     │
+│                                     │
+│  📧 aryanaditya8439@gmail.com       │
+│  🐙 github.com/arxncodes            │
+│                                     │
+│  [Email Me]  [GitHub]               │
 ├─────────────────────────────────────┤
 │  About This Application             │
 │  Technologies Used                  │
@@ -152,7 +161,10 @@ The Credits page showcases all the modern technologies used to build CollabDocs:
 **A**: Click your profile icon in the top-right corner, then select "Credits" from the dropdown menu.
 
 ### Q: How do I contact the developer?
-**A**: Visit the Credits page and click the email address or "Get in Touch" button.
+**A**: Visit the Credits page and click the email address, "Email Me" button, or visit the GitHub profile.
+
+### Q: Can I see the developer's other projects?
+**A**: Yes! Click the GitHub button or link to visit github.com/arxncodes and see all projects.
 
 ### Q: Can I suggest new features?
 **A**: Yes! Contact the developer via email from the Credits page.
@@ -171,6 +183,7 @@ The Credits page showcases all the modern technologies used to build CollabDocs:
 The Credits page is your gateway to:
 - 👨‍💻 Learn about the developer
 - 📧 Contact for support
+- 🐙 View GitHub projects
 - 🛠️ Understand the technology
 - 💬 Provide feedback
 - 🤝 Explore collaboration

@@ -134,12 +134,13 @@ Added to AppLayout profile dropdown menu:
 ### Contact Details
 - **Name**: arxncodes
 - **Email**: aryanaditya8439@gmail.com
-- **Role**: Lead Developer
+- **GitHub**: github.com/arxncodes
 
 ### Contact Methods
 1. **Email Link**: Click email address to open default email client
-2. **Get in Touch Button**: Opens email client with pre-filled recipient
-3. **Direct Email**: Copy email address manually
+2. **Email Me Button**: Opens email client with pre-filled recipient
+3. **GitHub Button**: Opens GitHub profile in new tab
+4. **GitHub Link**: Click to visit GitHub profile
 
 ## Customization
 
@@ -154,6 +155,11 @@ To update developer information, edit `src/pages/CreditsPage.tsx`:
 // Email
 <a href="mailto:aryanaditya8439@gmail.com">
   aryanaditya8439@gmail.com
+</a>
+
+// GitHub
+<a href="https://github.com/arxncodes">
+  github.com/arxncodes
 </a>
 
 // Bio
