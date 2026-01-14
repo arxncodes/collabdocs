@@ -4,6 +4,7 @@ import EditorPage from './pages/EditorPage';
 import AdminPage from './pages/AdminPage';
 import ProfilePage from './pages/ProfilePage';
 import InvitationPage from './pages/InvitationPage';
+import CreditsPage from './pages/CreditsPage';
 import NotFound from './pages/NotFound';
 import type { ReactNode } from 'react';
 
@@ -48,6 +49,12 @@ const routes: RouteConfig[] = [
     name: 'Profile',
     path: '/profile',
     element: <ProfilePage />,
+    visible: false,
+  },
+  {
+    name: 'Credits',
+    path: '/credits',
+    element: <CreditsPage />,
     visible: false,
   },
   {

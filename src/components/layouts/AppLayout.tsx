@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { FileText, Users, Menu, LogOut, User, Moon, Sun } from 'lucide-react';
+import { FileText, Users, Menu, LogOut, User, Moon, Sun, Info } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
@@ -151,6 +151,10 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                   <DropdownMenuItem onClick={() => navigate('/profile')}>
                     <User className="mr-2 h-4 w-4" />
                     Profile
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate('/credits')}>
+                    <Info className="mr-2 h-4 w-4" />
+                    Credits
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleSignOut}>
