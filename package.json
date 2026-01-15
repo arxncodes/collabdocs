@@ -1,5 +1,6 @@
 {
   "name": "miaoda-react-admin",
+  "homepage": "https://arxncodes.github.io/collabdocs",
   "version": "1.0.0",
   "type": "module",
   "main": "electron/main.js",
@@ -8,6 +9,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "deploy": "npm run build && gh-pages -d dist",
     "lint": "tsgo -p tsconfig.check.json; npx biome lint; .rules/check.sh;npx tailwindcss -i ./src/index.css -o /dev/null 2>&1 | grep -E '^(CssSyntaxError|Error):.*' || true;.rules/testBuild.sh",
     "electron:dev": "concurrently \"cross-env BROWSER=none vite\" \"wait-on http://localhost:5173 && cross-env NODE_ENV=development electron .\"",
     "electron:build": "vite build && electron-builder --win --x64",
@@ -97,12 +99,13 @@
     "cross-env": "^10.1.0",
     "electron": "^39.2.7",
     "electron-builder": "^26.4.0",
+    "gh-pages": "^6.3.0",
+    "miaoda-sc-plugin": "^1.0.4",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.11",
     "typescript": "~5.9.3",
     "vite": "^5.1.4",
     "vite-plugin-svgr": "^4.5.0",
-    "wait-on": "^9.0.3",
-    "miaoda-sc-plugin": "^1.0.4"
+    "wait-on": "^9.0.3"
   }
 }
