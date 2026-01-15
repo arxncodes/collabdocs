@@ -85,7 +85,7 @@ export function ShareDialog({
    * GitHub Pages + HashRouter requires "#/" in shared links
    */
   const buildInviteUrl = (token: string) => {
-    return `${window.location.origin}/#/invite/${token}`;
+    return `${window.location.origin}/collabdocs/#/invite/${token}`;
   };
 
   const handleCopyLink = (token: string) => {
