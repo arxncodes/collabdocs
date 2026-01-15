@@ -80,8 +80,16 @@ export function ShareDialog({
     }
   };
 
+  /**
+   * IMPORTANT:
+   * GitHub Pages + HashRouter requires "#/" in shared links
+   */
+  const buildInviteUrl = (token: string) => {
+    return `${window.location.origin}/#/invite/${token}`;
+  };
+
   const handleCopyLink = (token: string) => {
-    const url = `${window.location.origin}/invite/${token}`;
+    const url = buildInviteUrl(token);
     navigator.clipboard.writeText(url);
     setCopiedToken(token);
     toast({
@@ -202,9 +210,13 @@ export function ShareDialog({
               ) : (
                 <div className="space-y-3">
                   {invitations.map((invitation) => {
-                    const url = `${window.location.origin}/invite/${invitation.token}`;
-                    const isExpired = invitation.expires_at && new Date(invitation.expires_at) < new Date();
-                    const maxUsesReached = invitation.max_uses && invitation.use_count >= invitation.max_uses;
+                    const url = buildInviteUrl(invitation.token);
+                    const isExpired =
+                      invitation.expires_at &&
+                      new Date(invitation.expires_at) < new Date();
+                    const maxUsesReached =
+                      invitation.max_uses &&
+                      invitation.use_count >= invitation.max_uses;
 
                     return (
                       <div

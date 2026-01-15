@@ -84,7 +84,7 @@ export default function InvitationPage() {
         title: 'Success',
         description: 'You have been added as a collaborator',
       });
-      navigate(`/editor/${invitation.document_id}`);
+      navigate(`/editor/${invitation.document_id}`, { replace: true });
     } else {
       toast({
         title: 'Error',
