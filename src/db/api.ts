@@ -666,8 +666,15 @@ export async function acceptInvitation(
     .eq('user_id', userId)
     .maybeSingle();
 
+  // If already a collaborator, just update the invitation use count and return success
   if (existing) {
-    return { success: false };
+    await supabase
+      .from('document_invitations')
+      .update({
+        use_count: invitation.use_count + 1,
+      })
+      .eq('id', invitationId);
+    return { success: true };
   }
 
   // Add as collaborator
@@ -687,7 +694,6 @@ export async function acceptInvitation(
     .from('document_invitations')
     .update({
       status: 'accepted',
-      accepted_by: userId,
       use_count: invitation.use_count + 1,
     })
     .eq('id', invitationId);

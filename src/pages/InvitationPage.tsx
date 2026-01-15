@@ -53,12 +53,6 @@ export default function InvitationPage() {
       return;
     }
 
-    // Check if already accepted by this user
-    if (user && invite.accepted_by === user.id) {
-      setError('You have already accepted this invitation');
-      return;
-    }
-
     setInvitation(invite);
   };
 
