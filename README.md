@@ -1,11 +1,3 @@
-# Welcome to Your Miaoda Project
-Miaoda Application Link URL
-    URL:https://medo.dev/projects/app-8tgnyz6pnp4x
-
-# Welcome to Your Miaoda Project
-
-## Project Info
-
 ## Project Directory
 
 ```

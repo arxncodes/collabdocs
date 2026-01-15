@@ -19,7 +19,7 @@ export default defineConfig({
   optimizeDeps: {
     include: ['react', 'react-dom', 'react/jsx-runtime'],
   },
-  base: './',
+  base: process.env.GITHUB_PAGES ? '/collabdocs/' : './',
   build: {
     outDir: 'dist',
     emptyOutDir: true,
